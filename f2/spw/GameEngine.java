@@ -25,7 +25,7 @@ public class GameEngine implements KeyListener, GameReporter{
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;		
-		
+		gp.askUser();
 		gp.sprites.add(v);
 		
 		timer = new Timer(50, new ActionListener() {
@@ -91,6 +91,12 @@ public class GameEngine implements KeyListener, GameReporter{
 		case KeyEvent.VK_RIGHT:
 			v.move(1);
 			break;
+		case KeyEvent.VK_UP:
+			v.movey(-1);
+			break;
+		case KeyEvent.VK_DOWN:
+			v.movey(1);
+			break;		
 		case KeyEvent.VK_D:
 			difficulty += 0.1;
 			break;
