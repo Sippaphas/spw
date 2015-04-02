@@ -9,22 +9,26 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.swing.Timer;
+import javax.swing.*;
 
 
 public class GameEngine implements KeyListener, GameReporter{
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
-	private SpaceShip v;	
+	private SpaceShip v;
+	private Weapon	w;	
 	
 	private Timer timer;
 	
 	private long score = 0;
 	private double difficulty = 0.1;
-	
-	public GameEngine(GamePanel gp, SpaceShip v) {
+	private JFrame frame = new JFrame();
+
+	public GameEngine(GamePanel gp, SpaceShip v,Weapon w) {
 		this.gp = gp;
-		this.v = v;		
+		this.v = v;	
+		this.w = w;	
 		gp.askUser();
 		gp.sprites.add(v);
 		
@@ -69,6 +73,8 @@ public class GameEngine implements KeyListener, GameReporter{
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
+		Rectangle2D.Double wr = w.getRectangle();
+		
 		Rectangle2D.Double er;
 		for(Enemy e : enemies){
 			er = e.getRectangle();
@@ -81,6 +87,9 @@ public class GameEngine implements KeyListener, GameReporter{
 	
 	public void die(){
 		timer.stop();
+		JOptionPane.showMessageDialog(frame, "You Die !!");
+
+
 	}
 	
 	void controlVehicle(KeyEvent e) {
@@ -97,9 +106,21 @@ public class GameEngine implements KeyListener, GameReporter{
 		case KeyEvent.VK_DOWN:
 			v.movey(1);
 			break;		
-		case KeyEvent.VK_D:
+		case KeyEvent.VK_F4:
 			difficulty += 0.1;
 			break;
+
+		case KeyEvent.VK_F1:
+			difficulty -= 0.1;
+			break;	
+
+		case KeyEvent.VK_A:
+			w.moveGun(-1);
+			break;
+		case KeyEvent.VK_D:
+			w.moveGun(1);
+			break;		
+
 		}
 	}
 
