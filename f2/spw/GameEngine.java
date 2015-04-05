@@ -10,14 +10,15 @@ import java.util.Iterator;
 
 import javax.swing.Timer;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 
-public class GameEngine implements KeyListener, GameReporter{
+public class GameEngine implements KeyListener, GameReporter,MouseMotionListener{
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
 	private SpaceShip v;
-	private Weapon	w;	
 	
 	private Timer timer;
 	
@@ -25,12 +26,14 @@ public class GameEngine implements KeyListener, GameReporter{
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
 
-	public GameEngine(GamePanel gp, SpaceShip v,Weapon w) {
+
+	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;	
-		this.w = w;	
 		gp.askUser();
 		gp.sprites.add(v);
+		gp.addMouseMotionListener(this);
+
 		
 		timer = new Timer(50, new ActionListener() {
 			
@@ -45,6 +48,22 @@ public class GameEngine implements KeyListener, GameReporter{
 	
 	public void start(){
 		timer.start();
+	}
+
+	public void stop(){
+		timer.stop();
+	}
+
+	public void restart(){
+		gp.sprites.clear();
+		
+		enemies.clear();
+		
+		v.setPosition();
+		gp.sprites.add(v);
+		difficulty = 0.1;
+		score = 0;
+		timer.restart();	
 	}
 	
 	private void generateEnemy(){
@@ -73,7 +92,6 @@ public class GameEngine implements KeyListener, GameReporter{
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
-		Rectangle2D.Double wr = w.getRectangle();
 		
 		Rectangle2D.Double er;
 		for(Enemy e : enemies){
@@ -86,9 +104,24 @@ public class GameEngine implements KeyListener, GameReporter{
 	}
 	
 	public void die(){
-		timer.stop();
-		JOptionPane.showMessageDialog(frame, "You Die !!");
+		//timer.stop();
+		
+		Object[] options = {"Exit",
+                    "Try Again"};
+		int n = JOptionPane.showOptionDialog(frame,
+	    "Do you want try again?",
+	    "You Die!! Game Over",
+	    JOptionPane.YES_NO_OPTION,
+	    JOptionPane.QUESTION_MESSAGE,
+	    null,     //do not use a custom Icon
+	    options,  //the titles of buttons
+	    options[0]); //default button title
 
+		if(n==0){
+			System.exit(0);
+		}else {
+			restart();
+		}
 
 	}
 	
@@ -96,34 +129,35 @@ public class GameEngine implements KeyListener, GameReporter{
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
 			v.move(-1);
+			//v.moveGunX(-1);
 			break;
 		case KeyEvent.VK_RIGHT:
 			v.move(1);
+			//v.moveGunX(1);
 			break;
 		case KeyEvent.VK_UP:
 			v.movey(-1);
+			//v.moveGunY(-1);
 			break;
 		case KeyEvent.VK_DOWN:
 			v.movey(1);
+			//v.moveGunY(1);
 			break;		
 		case KeyEvent.VK_F4:
-			difficulty += 0.1;
+			//difficulty += 0.1;
 			break;
 
 		case KeyEvent.VK_F1:
-			difficulty -= 0.1;
+			//difficulty -= 0.1;
 			break;	
-
-		case KeyEvent.VK_A:
-			w.moveGun(-1);
-			break;
-		case KeyEvent.VK_D:
-			w.moveGun(1);
-			break;		
 
 		}
 	}
 
+	void controlmouseVehicle(MouseEvent m){
+		v.mouseMove(m.getX(),m.getY());
+	}
+	
 	public long getScore(){
 		return score;
 	}
@@ -132,6 +166,16 @@ public class GameEngine implements KeyListener, GameReporter{
 	public void keyPressed(KeyEvent e) {
 		controlVehicle(e);
 		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent m){
+		controlmouseVehicle(m);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		System.out.println("Fire!!!");
 	}
 
 	@Override
