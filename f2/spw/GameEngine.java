@@ -1,6 +1,7 @@
 package f2.spw;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -12,19 +13,26 @@ import javax.swing.Timer;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseEvent;
+import net.java.games.input.*;
 
 
-public class GameEngine implements KeyListener, GameReporter,MouseMotionListener{
+public class GameEngine implements KeyListener, GameReporter,MouseMotionListener,MouseListener{
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
 	private SpaceShip v;
+	//private Bullet bul; 
 	
 	private Timer timer;
 	
 	private long score = 0;
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
+
+	ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment(); 
+	Controller[] cs = ce.getControllers(); 
 
 
 	public GameEngine(GamePanel gp, SpaceShip v) {
@@ -33,7 +41,11 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 		gp.askUser();
 		gp.sprites.add(v);
 		gp.addMouseMotionListener(this);
+		gp.addMouseListener(this);
 
+		for (int i = 0; i < cs.length; i++) {
+			System.out.println(i + ". " + cs[i].getName() + ", " + cs[i].getType() ); 
+		}	
 		
 		timer = new Timer(50, new ActionListener() {
 			
@@ -53,6 +65,8 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	public void stop(){
 		timer.stop();
 	}
+
+	
 
 	public void restart(){
 		gp.sprites.clear();
@@ -85,13 +99,14 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 			if(!e.isAlive()){
 				e_iter.remove();
 				gp.sprites.remove(e);
-				score += 500;
+				
 			}
 		}
 		
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
+		//Rectangle2D.Double br = bul.getRectangle();
 		
 		Rectangle2D.Double er;
 		for(Enemy e : enemies){
@@ -99,12 +114,15 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 			if(er.intersects(vr)){
 				die();
 				return;
-			}
+			}/*else if(br.intersects(er)){
+				gp.sprites.remove(e);
+				score += 500;
+			}*/
 		}
 	}
 	
 	public void die(){
-		//timer.stop();
+		timer.stop();
 		
 		Object[] options = {"Exit",
                     "Try Again"};
@@ -143,6 +161,11 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 			v.movey(1);
 			//v.moveGunY(1);
 			break;		
+
+		case KeyEvent.VK_P:
+			//v.moveGunY(1);
+			break;		
+				
 		case KeyEvent.VK_F4:
 			//difficulty += 0.1;
 			break;
@@ -150,6 +173,8 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 		case KeyEvent.VK_F1:
 			//difficulty -= 0.1;
 			break;	
+		case KeyEvent.VK_F:
+		//	bul.proceed();
 
 		}
 	}
@@ -167,17 +192,6 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 		controlVehicle(e);
 		
 	}
-
-	@Override
-	public void mouseMoved(MouseEvent m){
-		controlmouseVehicle(m);
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		System.out.println("Fire!!!");
-	}
-
 	@Override
 	public void keyReleased(KeyEvent e) {
 		//do nothing
@@ -187,4 +201,39 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	public void keyTyped(KeyEvent e) {
 		//do nothing		
 	}
+
+	@Override
+	public void mouseMoved(MouseEvent m){
+		controlmouseVehicle(m);
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent m) {
+		//do nothing
+	}
+
+	@Override
+	public void mousePressed(MouseEvent m) {
+       // System.out.println("Fire !!!");
+    }
+
+    public void mouseClicked(MouseEvent em) {
+		System.out.println("Fire !!!");    
+	}
+
+
+    @Override
+    public void mouseEntered(MouseEvent m) {
+    	//
+    }
+    @Override
+    public void mouseExited(MouseEvent m) {
+
+    }
+    @Override
+    public void mouseReleased(MouseEvent m) {
+
+    }
+
+	
 }

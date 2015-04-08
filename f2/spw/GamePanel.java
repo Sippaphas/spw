@@ -7,9 +7,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.EventQueue;
+import java.awt.*;
 
 
-public class GamePanel extends JPanel {
+public class GamePanel extends JPanel{
 	
 	private BufferedImage bi;	
 	Graphics2D big;
@@ -52,5 +53,7 @@ public class GamePanel extends JPanel {
 		        choices[0]);
         return s; 
     }
+
+  //  public
 
 }
