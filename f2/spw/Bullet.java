@@ -9,8 +9,6 @@ import javax.swing.*;
 
 public class Bullet extends Sprite {
 
-	public static final int Y_TO_FADE = 400;
-	public static final int Y_TO_DIE = 600;
 	 
 	private int step = 12;
 	private boolean alive = true;
@@ -36,9 +34,9 @@ public class Bullet extends Sprite {
 
 	public void proceed(){
 		y += step;
-		if(y > Y_TO_DIE){
+	/*	if(y > Y_TO_DIE){
 			alive = false;
-		}
+		}*/
 	}
 	
 	

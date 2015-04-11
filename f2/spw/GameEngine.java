@@ -24,28 +24,32 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
 	private SpaceShip v;
 	//private Bullet bul; 
-	
+	private String inputstatus;
 	private Timer timer;
 	
 	private long score = 0;
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
 
-	ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment(); 
-	Controller[] cs = ce.getControllers(); 
+	
 
 
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;	
-		gp.askUser();
+		inputstatus = gp.askUser();
 		gp.sprites.add(v);
-		gp.addMouseMotionListener(this);
-		gp.addMouseListener(this);
 
-		for (int i = 0; i < cs.length; i++) {
-			System.out.println(i + ". " + cs[i].getName() + ", " + cs[i].getType() ); 
-		}	
+		if(inputstatus == "Mouse"){
+			gp.addMouseMotionListener(this);
+			gp.addMouseListener(this);
+			//removeKeyListener( e);
+
+		}else if(inputstatus == "Keyboard"){
+
+		}
+
+		System.out.println(inputstatus);
 		
 		timer = new Timer(50, new ActionListener() {
 			
@@ -189,7 +193,10 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	
 	@Override
 	public void keyPressed(KeyEvent e) {
-		controlVehicle(e);
+
+		if(inputstatus == "Keyboard"){
+			controlVehicle(e);	
+		}
 		
 	}
 	@Override

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 import java.awt.EventQueue;
 import java.awt.*;
+import net.java.games.input.*;
 
 
 public class GamePanel extends JPanel{
@@ -15,8 +16,11 @@ public class GamePanel extends JPanel{
 	private BufferedImage bi;	
 	Graphics2D big;
 	ArrayList<Sprite> sprites = new ArrayList<Sprite>();
+	ArrayList<String> choice = new ArrayList<String>();
 	JFrame frame = new JFrame();
-
+	ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment(); 
+	Controller[] cs = ce.getControllers(); 
+	
 	public GamePanel() {
 		bi = new BufferedImage(400, 600, BufferedImage.TYPE_INT_ARGB);
 		big = (Graphics2D) bi.getGraphics();
@@ -43,15 +47,20 @@ public class GamePanel extends JPanel{
 
 	public String askUser() {
 
-		String[] choices = new String[]{"Joystick", "Keyboard","Mouse"};
-
+		for (int i = 0; i < cs.length; i++){
+			choice.add(cs[i].getType().toString());
+			//System.out.println(choices[i]);
+		}
+		
+		Object[] choices = choice.toArray();
+		
         String s = (String) JOptionPane.showInputDialog(
                 frame,"EnterInput","EnterInputDevice",
                 JOptionPane.QUESTION_MESSAGE, 
         		null, 
 		        choices, 
 		        choices[0]);
-        return s; 
+        return s ;
     }
 
   //  public

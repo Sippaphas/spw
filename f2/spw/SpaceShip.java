@@ -27,7 +27,8 @@ public class SpaceShip extends Sprite {
 	}
 
 	public void setPosition(){
-
+		x = 250;
+		y = 550;
 	}
 
 	public void mouseMove(int mousex,int mousey){
