@@ -44,7 +44,7 @@ public class SpaceShip extends Sprite {
 			x = 400 - width;
 		
 		
-		System.out.println("Vehicle x axis"+x);
+
 	}
 
 	public void movey(int ydirection){
@@ -53,7 +53,6 @@ public class SpaceShip extends Sprite {
 			y = 0;
 		if(y > 550)
 			y = 550;
-		System.out.println("Vehicle Y axis"+y);
 	}
 
 	public void moveGunX(int gunxdirection){
@@ -65,7 +64,7 @@ public class SpaceShip extends Sprite {
 			gunx = 400 - width;
 		*/
 
-		System.out.println("Gun X Axis"+gunx);
+
 	}
 
 	public void moveGunY(int gunydirection){
@@ -77,7 +76,7 @@ public class SpaceShip extends Sprite {
 			guny = 400 - width;
 		*/
 
-		System.out.println("Gun Y Axis"+guny);
+
 	}
 
 	public void turnGun(int gundirection){
@@ -97,10 +96,6 @@ public class SpaceShip extends Sprite {
 		}else {
 			guntmp = 0 ; 
 		}
-		System.out.println("Gun Position"+ guntmp);
-		System.out.println("Gun X Axis"+gunx);
-		System.out.println("Gun Y Axis"+guny);
-
 	}
 
 }

@@ -28,6 +28,7 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	private Timer timer;
 	
 	private long score = 0;
+	public int life = 1; 
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
 
@@ -37,13 +38,12 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;	
-		inputstatus = gp.askUser();
+		askInputUser();
 		gp.sprites.add(v);
 
 		if(inputstatus == "Mouse"){
 			gp.addMouseMotionListener(this);
 			gp.addMouseListener(this);
-			//removeKeyListener( e);
 
 		}else if(inputstatus == "Keyboard"){
 
@@ -81,6 +81,7 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 		gp.sprites.add(v);
 		difficulty = 0.1;
 		score = 0;
+		life = 1 ; 
 		timer.restart();	
 	}
 	
@@ -103,25 +104,33 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 			if(!e.isAlive()){
 				e_iter.remove();
 				gp.sprites.remove(e);
-				
+				score += 100;
+				System.out.println("Score:"+score);
+
+				if(score%10000 == 0 ){
+					life++;
+					System.out.println("Life:"+life);
+				}
 			}
+
+			
 		}
 		
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
-		//Rectangle2D.Double br = bul.getRectangle();
 		
 		Rectangle2D.Double er;
 		for(Enemy e : enemies){
 			er = e.getRectangle();
 			if(er.intersects(vr)){
-				die();
+				//die();
+				life--;
+				if(life<=0){
+					die();
+				}
 				return;
-			}/*else if(br.intersects(er)){
-				gp.sprites.remove(e);
-				score += 500;
-			}*/
+			}
 		}
 	}
 	
@@ -164,21 +173,18 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 		case KeyEvent.VK_DOWN:
 			v.movey(1);
 			//v.moveGunY(1);
-			break;		
-
-		case KeyEvent.VK_P:
-			//v.moveGunY(1);
-			break;		
+			break;			
 				
 		case KeyEvent.VK_F4:
-			//difficulty += 0.1;
+			difficulty += 0.1;
 			break;
 
 		case KeyEvent.VK_F1:
-			//difficulty -= 0.1;
+			difficulty -= 0.1;
 			break;	
 		case KeyEvent.VK_F:
 		//	bul.proceed();
+
 
 		}
 	}
@@ -186,9 +192,21 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	void controlmouseVehicle(MouseEvent m){
 		v.mouseMove(m.getX(),m.getY());
 	}
+
+	public void askInputUser(){
+		inputstatus = gp.askUser();
+	}
 	
+	public String getInputStatus(){
+		return inputstatus;
+	}
+
 	public long getScore(){
 		return score;
+	}
+
+	public int getLife(){
+		return life;
 	}
 	
 	@Override
@@ -227,7 +245,6 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
     public void mouseClicked(MouseEvent em) {
 		System.out.println("Fire !!!");    
 	}
-
 
     @Override
     public void mouseEntered(MouseEvent m) {
