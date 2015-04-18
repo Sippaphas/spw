@@ -18,7 +18,8 @@ import java.awt.event.MouseEvent;
 import net.java.games.input.*;
 
 
-public class GameEngine implements KeyListener, GameReporter,MouseMotionListener,MouseListener{
+
+public class GameEngine  implements KeyListener, GameReporter,MouseMotionListener,MouseListener {
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
@@ -46,7 +47,9 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 			gp.addMouseListener(this);
 
 		}else if(inputstatus == "Keyboard"){
-
+			//do nothing
+		}else if(inputstatus == "Stick"){
+			//
 		}
 
 		System.out.println(inputstatus);
@@ -59,7 +62,9 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 			}
 		});
 		timer.setRepeats(true);
+
 		
+
 	}
 	
 	public void start(){
@@ -70,7 +75,9 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 		timer.stop();
 	}
 
-	
+	public void run(){
+		stickTypeJoystick();
+	}	
 
 	public void restart(){
 		gp.sprites.clear();
@@ -208,7 +215,26 @@ public class GameEngine implements KeyListener, GameReporter,MouseMotionListener
 	public int getLife(){
 		return life;
 	}
-	
+
+
+
+	public void stickTypeJoystick(){
+
+		JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
+				
+     	//while(joystick.pollController() == true){
+            
+            int xAxisValuePercentage = joystick.getXAxisPercentage();
+            int yAxisValuePercentage = joystick.getYAxisPercentage();
+            
+            System.out.println(xAxisValuePercentage);
+
+      	//}
+
+	}
+
+
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 
