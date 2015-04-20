@@ -36,6 +36,11 @@ public class SpaceShip extends Sprite {
 		y=mousey;
 	}
 
+	public void stickMove(int stickx,int sticky){
+		x=stickx;
+		y=sticky;
+	}
+
 	public void move(int direction){
 		x += (step * direction);
 		if(x < 0)
@@ -43,7 +48,7 @@ public class SpaceShip extends Sprite {
 		if(x > 400 - width)
 			x = 400 - width;
 		
-		
+		System.out.println("X Position:"+x);
 
 	}
 
@@ -53,6 +58,7 @@ public class SpaceShip extends Sprite {
 			y = 0;
 		if(y > 550)
 			y = 550;
+		System.out.println("Y Position:"+y);
 	}
 
 	public void moveGunX(int gunxdirection){

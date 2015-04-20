@@ -32,6 +32,7 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 	public int life = 1; 
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
+	JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
 
 	
 
@@ -48,8 +49,6 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 
 		}else if(inputstatus == "Keyboard"){
 			//do nothing
-		}else if(inputstatus == "Stick"){
-			//
 		}
 
 		System.out.println(inputstatus);
@@ -139,6 +138,11 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 				return;
 			}
 		}
+
+		//polling Joystick 
+		if(inputstatus == "Stick"){
+			stickTypeJoystick();
+		}
 	}
 	
 	public void die(){
@@ -219,17 +223,14 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 
 
 	public void stickTypeJoystick(){
-
-		JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
-				
-     	//while(joystick.pollController() == true){
+            joystick.pollController();
+            int xAxisValuePercentage = (joystick.getXAxisPercentage()*380)/100;
+            int yAxisValuePercentage = (joystick.getYAxisPercentage()*550)/100;
             
-            int xAxisValuePercentage = joystick.getXAxisPercentage();
-            int yAxisValuePercentage = joystick.getYAxisPercentage();
-            
-            System.out.println(xAxisValuePercentage);
+            v.stickMove(xAxisValuePercentage,yAxisValuePercentage);
 
-      	//}
+            //System.out.println("X:"+xAxisValuePercentage);
+            //System.out.println("Y:"+yAxisValuePercentage);
 
 	}
 
