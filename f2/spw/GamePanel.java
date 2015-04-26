@@ -14,27 +14,47 @@ import net.java.games.input.*;
 public class GamePanel extends JPanel{
 	
 	private BufferedImage bi;	
+	private String highscore;
+
+	Image bg = null;
+
 	Graphics2D big;
 	ArrayList<Sprite> sprites = new ArrayList<Sprite>();
 	ArrayList<String> choice = new ArrayList<String>();
 	JFrame frame = new JFrame();
 	ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment(); 
 	Controller[] cs = ce.getControllers(); 
+
+	ImageIcon panel = new ImageIcon(this.getClass().getResource("background.jpg"));
+
+	
 	
 	public GamePanel() {
+
+
 		bi = new BufferedImage(400, 600, BufferedImage.TYPE_INT_ARGB);
 		big = (Graphics2D) bi.getGraphics();
-		big.setBackground(Color.BLACK);
+
+		bg = panel.getImage();
+		big.drawImage(bg,0,0,null);
+
+
+		//big.setBackground(Color.BLACK);
+		
+		//bg = icon.getImage();
+		
+
 	}
 
 	public void updateGameUI(GameReporter reporter){
 		big.clearRect(0, 0, 400, 600);
-		
+		big.drawImage(bg,0,0,null);
 		big.setColor(Color.WHITE);		
 		big.drawString(String.format("%08d", reporter.getScore()), 300, 20);
 
 		big.drawString("Life:"+reporter.getLife(),250,20);
-
+		big.drawString(String.format("High Score: %08d",reporter.getHighScore()),0,20);
+		
 
 
 		for(Sprite s : sprites){
@@ -48,6 +68,7 @@ public class GamePanel extends JPanel{
 	public void paint(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.drawImage(bi, null, 0, 0);
+
 	}
 
 	public String askUser() {
@@ -58,7 +79,6 @@ public class GamePanel extends JPanel{
 		}
 		
 		Object[] choices = choice.toArray();
-		
         String s = (String) JOptionPane.showInputDialog(
                 frame,"EnterInput","EnterInputDevice",
                 JOptionPane.QUESTION_MESSAGE, 

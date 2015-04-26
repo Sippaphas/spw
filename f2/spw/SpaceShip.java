@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class SpaceShip extends Sprite {
 
-	int step = 50;
+	int step = 25;
 	int gunx = x ;
 	int guny = y ; 
 	int guntmp = 0; 

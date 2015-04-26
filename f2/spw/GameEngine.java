@@ -1,13 +1,11 @@
 package f2.spw;
 
-import java.awt.event.ActionEvent;
+
 import java.awt.event.*;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 import javax.swing.Timer;
 import javax.swing.*;
@@ -16,24 +14,29 @@ import java.awt.event.*;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import net.java.games.input.*;
-
+import java.io.*;
+import java.net.*;
 
 
 public class GameEngine  implements KeyListener, GameReporter,MouseMotionListener,MouseListener {
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
+	private ArrayList<Bullet> bull = new ArrayList<Bullet>();
+
 	private SpaceShip v;
 	//private Bullet bul; 
 	private String inputstatus;
 	private Timer timer;
-	
 	private long score = 0;
 	public int life = 1; 
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
 	JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
 
+	private long highscore;
+	URL url = getClass().getResource("score.txt");
+	File highscoreFile = new File(url.getPath());
 	
 
 
@@ -49,6 +52,8 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 
 		}else if(inputstatus == "Keyboard"){
 			//do nothing
+		}else if(inputstatus == null){
+			System.exit(0);
 		}
 
 		System.out.println(inputstatus);
@@ -68,6 +73,12 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 	
 	public void start(){
 		timer.start();
+
+		try{
+			highscore = Long.parseLong(new Scanner(highscoreFile).useDelimiter("\\Z").next());
+		}catch(Exception e){
+			System.out.println("Can't Read File.");
+		}
 	}
 
 	public void stop(){
@@ -110,25 +121,36 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 			if(!e.isAlive()){
 				e_iter.remove();
 				gp.sprites.remove(e);
+
+			if(e.isdamage()){
 				score += 100;
-				System.out.println("Score:"+score);
 
 				if(score%10000 == 0 ){
 					life++;
-					System.out.println("Life:"+life);
-				}
+				}	
 			}
-
+		}		
+		Iterator<Bullet> b_iter = bull.iterator();
+		while(b_iter.hasNext()){
+			Bullet b = b_iter.next();
+			b.proceed();
 			
+			if(!b.isAlive()){
+				b_iter.remove();
+				gp.sprites.remove(b);
+			}
 		}
+
+
 		
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
-		
 		Rectangle2D.Double er;
-		for(Enemy e : enemies){
-			er = e.getRectangle();
+		Rectangle2D.Double br;
+
+		for(Enemy em : enemies){
+			er = em.getRectangle();
 			if(er.intersects(vr)){
 				//die();
 				life--;
@@ -137,17 +159,44 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 				}
 				return;
 			}
+			for(Bullet b : bull){
+				br = b.getRectangle();
+				if(br.intersects(er)){
+					e.getDamaged();
+					b.getDamaged();
+					return;
+				}				
+			}
+			
+
+
 		}
+
+
+	
+		
 
 		//polling Joystick 
 		if(inputstatus == "Stick"){
 			stickTypeJoystick();
 		}
 	}
-	
+	}
 	public void die(){
 		timer.stop();
 		
+		if(score > highscore){
+			try{
+				FileWriter f2 = new FileWriter(highscoreFile, false);
+				f2.write(String.valueOf(score));
+				f2.close();
+			}catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+
+		gp.updateGameUI(this);
+
 		Object[] options = {"Exit",
                     "Try Again"};
 		int n = JOptionPane.showOptionDialog(frame,
@@ -185,7 +234,11 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 			v.movey(1);
 			//v.moveGunY(1);
 			break;			
-				
+		
+		case KeyEvent.VK_SPACE:
+			fire();
+			break;
+
 		case KeyEvent.VK_F4:
 			difficulty += 0.1;
 			break;
@@ -220,21 +273,47 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 		return life;
 	}
 
-
+	private void fire(){
+		Bullet b = new Bullet((v.x) + (v.width/2) - 5, v.y);
+		gp.sprites.add(b);
+		bull.add(b);
+	}
 
 	public void stickTypeJoystick(){
             joystick.pollController();
+
             int xAxisValuePercentage = (joystick.getXAxisPercentage()*380)/100;
             int yAxisValuePercentage = (joystick.getYAxisPercentage()*550)/100;
             
-            v.stickMove(xAxisValuePercentage,yAxisValuePercentage);
+            /*
+            if(xAxisValuePercentage>50){
+            	v.move(1);
+            }else if(xAxisValuePercentage<50){
+            	v.move(-1);
+            }else{
+            	v.move(0);
+
+            }
+
+            if(yAxisValuePercentage>50){
+            	v.movey(-1);
+            }else if(yAxisValuePercentage<50){
+            	v.movey(1);
+            }else{
+            	v.move(0);
+            }
+			*/
+
+           v.stickMove(xAxisValuePercentage,yAxisValuePercentage);
 
             //System.out.println("X:"+xAxisValuePercentage);
             //System.out.println("Y:"+yAxisValuePercentage);
 
 	}
 
-
+	public long getHighScore(){
+    	return highscore;
+    }
 
 	@Override
 	public void keyPressed(KeyEvent e) {
