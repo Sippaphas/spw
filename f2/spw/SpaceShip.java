@@ -23,7 +23,6 @@ public class SpaceShip extends Sprite {
 		g.setColor(Color.BLUE);
 		g.fillRect(x, y, width, height);
 		g.fillRect(x+5,y-20,10,20);
-		
 	}
 
 	public void setPosition(){
@@ -60,52 +59,4 @@ public class SpaceShip extends Sprite {
 			y = 550;
 		System.out.println("Y Position:"+y);
 	}
-
-	public void moveGunX(int gunxdirection){
-		
-		/*gunx += (step * gunxdirection);
-		if(gunx < 0)
-			gunx = 0;
-		if(gunx > 400 - width)
-			gunx = 400 - width;
-		*/
-
-
-	}
-
-	public void moveGunY(int gunydirection){
-
-		/*guny += (step * gunydirection);
-		if(guny < 0)
-			guny = 0;
-		if(guny > 400 - width)
-			guny = 400 - width;
-		*/
-
-
-	}
-
-	public void turnGun(int gundirection){
-		guntmp += gundirection ; 
-		if(guntmp == 0){
-			gunx = x+5  ; 
-			guny = y+30; 
-		}else if (guntmp == 1){
-			gunx = x ; 
-			guny = y + 10 ;
-		}else if (guntmp == 2){
-			gunx = x ; 
-			guny = y - 10 ; 
-		}else if (guntmp == 3){
-			gunx = x - 10; 
-			guny = y; 
-		}else {
-			guntmp = 0 ; 
-		}
-	}
-
-
-	
-
-
 }

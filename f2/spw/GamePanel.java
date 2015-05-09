@@ -72,22 +72,21 @@ public class GamePanel extends JPanel{
 	}
 
 	public String askUser() {
-
+		
 		for (int i = 0; i < cs.length; i++){
 			choice.add(cs[i].getType().toString());
 			//System.out.println(choices[i]);
 		}
 		
 		Object[] choices = choice.toArray();
-        String s = (String) JOptionPane.showInputDialog(
-                frame,"EnterInput","EnterInputDevice",
-                JOptionPane.QUESTION_MESSAGE, 
-        		null, 
-		        choices, 
-		        choices[0]);
-        return s ;
+	    String s = (String) JOptionPane.showInputDialog(
+	                frame,"EnterInput","EnterInputDevice",
+	                JOptionPane.QUESTION_MESSAGE, 
+	        		null, 
+			        choices, 
+			        choices[0]);
+	    return s ;	
+		
     }
-
-  //  public
 
 }

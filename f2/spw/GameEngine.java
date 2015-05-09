@@ -32,7 +32,7 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 	public int life = 1; 
 	private double difficulty = 0.1;
 	private JFrame frame = new JFrame();
-	JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK);
+	JInputJoystick joystick = new JInputJoystick(Controller.Type.STICK,Controller.Type.GAMEPAD);
 
 	private long highscore;
 	URL url = getClass().getResource("score.txt");
@@ -121,15 +121,8 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 			if(!e.isAlive()){
 				e_iter.remove();
 				gp.sprites.remove(e);
-
-			if(e.isdamage()){
-				score += 100;
-
-				if(score%10000 == 0 ){
-					life++;
-				}	
-			}
-		}		
+				
+			}		
 		Iterator<Bullet> b_iter = bull.iterator();
 		while(b_iter.hasNext()){
 			Bullet b = b_iter.next();
@@ -138,6 +131,7 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 			if(!b.isAlive()){
 				b_iter.remove();
 				gp.sprites.remove(b);
+
 			}
 		}
 
@@ -157,14 +151,19 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 				if(life<=0){
 					die();
 				}
-				return;
+				//return;
 			}
 			for(Bullet b : bull){
 				br = b.getRectangle();
 				if(br.intersects(er)){
-					e.getDamaged();
-					b.getDamaged();
-					return;
+					e.die();
+					b.die();
+					score += 100;
+
+					if(score%10000 == 0 ){
+						life++;
+					}	
+					//return;
 				}				
 			}
 			
@@ -280,32 +279,45 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 	}
 
 	public void stickTypeJoystick(){
+
             joystick.pollController();
 
+            boolean success = true;
             int xAxisValuePercentage = (joystick.getXAxisPercentage()*380)/100;
             int yAxisValuePercentage = (joystick.getYAxisPercentage()*550)/100;
+            ArrayList<Boolean> btvalue = new ArrayList<Boolean>();
+
+            /*btvalue = joystick.getButtonsValues();
+
+            for (Boolean butvalue : btvalue) {
+  				System.out.println("Number = " + butvalue);
+   			} */
+
+            //for(Arrayist btbutt : btvalue){
+            //	System.out.println(btbutt);
+            //}
+
+          
+
+            //boolean triggerbutton = (joystick.getButtonValue(5));
+
+           // System.out.println(triggerbutton);
             
             /*
             if(xAxisValuePercentage>50){
             	v.move(1);
             }else if(xAxisValuePercentage<50){
             	v.move(-1);
-            }else{
-            	v.move(0);
-
-            }
-
-            if(yAxisValuePercentage>50){
-            	v.movey(-1);
-            }else if(yAxisValuePercentage<50){
-            	v.movey(1);
-            }else{
-            	v.move(0);
-            }
+            
+            .
 			*/
 
            v.stickMove(xAxisValuePercentage,yAxisValuePercentage);
-
+			if(joystick.getButtonValue(0) == success){
+          		fire();
+ 			}
+		   //System.out.println(joystick.getButtonsValues());
+        	//} 
             //System.out.println("X:"+xAxisValuePercentage);
             //System.out.println("Y:"+yAxisValuePercentage);
 
@@ -345,11 +357,13 @@ public class GameEngine  implements KeyListener, GameReporter,MouseMotionListene
 
 	@Override
 	public void mousePressed(MouseEvent m) {
+       fire();
        // System.out.println("Fire !!!");
     }
 
     public void mouseClicked(MouseEvent em) {
-		System.out.println("Fire !!!");    
+//		System.out.println("Fire !!!");    
+		fire();
 	}
 
     @Override

@@ -155,24 +155,38 @@ public class JInputJoystick {
         boolean isControllerValid;
         
         // Clear previous values of buttons.
-       // buttonsValues.clear();
+        buttonsValues.clear();
         
         isControllerValid = controller.poll();
         if(!isControllerValid)
             return false;
         
-        //Component[] components = controller.getComponents();
+        Component[] components = controller.getComponents();
         
-      /*  for(int i=0; i < components.length; i++) {
+        //System.out.println("Component:"+components.length);
+
+        for(int i=0; i < components.length; i++) {
             Component component = components[i];
             
             // Add states of the buttons
-            if(component.getName().contains("Button"))
-                if(component.getPollData() == 1.0f)
+            //System.out.println("sss '"+component.getName()+"'");
+
+            //if(component.getName().contains("Button"))
+            if(component.getName().equals(Integer.toString(i))){
+               // System.out.println(component.getPollData());
+                if(component.getPollData() == 1.0f){
                     buttonsValues.add(Boolean.TRUE);
-                else
+                   // System.out.println("Btn True");
+
+                }   
+                else{
                     buttonsValues.add(Boolean.FALSE);
-        }*/
+                   // System.out.println("Btn False");
+                }
+            }
+                    
+        }
+
         
         return isControllerValid;
     }

@@ -15,7 +15,7 @@ public class Bullet extends Sprite{
 	private boolean alive = true;
 	
 	public Bullet(int x, int y) {
-		super(x , y, 20 , 20);	
+		super(x , y, 5 , 5);	
 	}
 
 	@Override
@@ -45,9 +45,8 @@ public class Bullet extends Sprite{
 	public boolean isAlive(){
 		return alive;
 	}
-	
-	public void getDamaged(){
-		this.alive = false;
-	}
 
+	public void die(){
+		alive = false;
+	}
 }

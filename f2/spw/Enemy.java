@@ -30,19 +30,7 @@ public class Enemy extends Sprite{
 		
 	}
 
-	public void damaged(){
-		this.alive = false;
-	}
-
-	public boolean isdamage(){
-		return damage;
-	}
-
-	public void getDamaged(){
-		this.damage = true;
-		this.alive = false;
-	}
-
+	
 	public void proceed(){
 		y += step;
 		if(y > Y_TO_DIE){
@@ -50,6 +38,10 @@ public class Enemy extends Sprite{
 		}
 	}
 	
+	public void die(){
+		alive = false;
+	}
+
 	public boolean isAlive(){
 		return alive;
 	}
